@@ -24,8 +24,8 @@ public class TeleopDrive extends CommandBase {
   @Override
   public void execute() {
     // Add input from pad.
-    double xLeftAxis = 0; // should equal variable form pad
-    double yLeftAxis = 0; // should equal variable form pad
+    double xLeftAxis = Robot.oi.getLX(); // should equal variable form pad
+    double yLeftAxis = Robot.oi.getLY(); // should equal variable form pad
   
     Robot.driveTrain.setMotors(yLeftAxis + xLeftAxis * Constants.DRIVE_CONTROL, yLeftAxis - xLeftAxis * Constants.DRIVE_CONTROL);
   }

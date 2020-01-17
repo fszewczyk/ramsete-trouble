@@ -11,22 +11,28 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.OI;
+import frc.robot.drivetrain.TeleopDrive;
 
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   public static DriveTrain driveTrain;
+  public static OI oi;
+  public static TeleopDrive teleopDrive;
+
   private RobotContainer m_robotContainer;
 
   @Override
   public void robotInit() {
     driveTrain = new DriveTrain();   
     m_robotContainer = new RobotContainer();
+    teleopDrive = new TeleopDrive();
   }
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run();    
   }
 
   @Override
@@ -69,5 +75,4 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   
   }
-
 }
