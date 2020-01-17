@@ -50,11 +50,7 @@ public class OISubsystem extends SubsystemBase {
     if(SF > 0) //drive MODE
     {
       Robot.driveMode = true;
-      if (SA < 0) new Intake.intake();
-      else if (SA > 0) new Shooter.shoot();
-  
-      if (SF < 0) new Elevator.goDown();
-      else if (SF > 0) new Elevator.goUp();
+
     }
     else //elevator MODE
     {
