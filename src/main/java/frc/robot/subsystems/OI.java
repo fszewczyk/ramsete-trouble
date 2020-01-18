@@ -43,7 +43,10 @@ public class OI extends SubsystemBase {
   public double getRTrigger() {
     return pad.getRawAxis(Constants.R_TRIGGER);
   }
-
+  public boolean getYButton()
+  {
+    return pad.getRawButton(Constants.Y_BUTTON);
+  }
 
   @Override
   public void periodic() 

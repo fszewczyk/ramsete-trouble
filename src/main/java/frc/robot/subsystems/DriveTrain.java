@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -42,8 +41,8 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void setMotors(double left_speed, double right_speed) {
-    SmartDashboard.putNumber("left motors", left_speed)
-    SmartDashboard.putNumber("right motors", right_speed)
+    //SmartDashboard.putNumber("left motors", left_speed);
+    //SmartDashboard.putNumber("right motors", right_speed);
     //leftMotorMaster.set(ControlMode.PercentOutput, left_speed);
     //rightMotorMaster.set(ControlMode.PercentOutput, right_speed);
   }

@@ -19,19 +19,19 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public static DriveTrain driveTrain;
   public static OI oi;
-  public static TeleopDrive teleopDrive;
+  //public static TeleopDrive teleopDrive;
 
-  private RobotContainer m_robotContainer;
+  //private RobotContainer m_robotContainer;
 
   @Override
   public void robotInit() {
     driveTrain = new DriveTrain();   
-    m_robotContainer = new RobotContainer();
-    teleopDrive = new TeleopDrive();
+    //m_robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
+    CommandScheduler.getInstance().schedule(new TeleopDrive());
     CommandScheduler.getInstance().run();    
   }
 

@@ -36,4 +36,5 @@ public final class Constants {
 	public static final int RY_AXIS = 5;
 	public static final int L_TRIGGER = 2;
 	public static final int R_TRIGGER = 3;
+	public static final int Y_BUTTON = 0;
 }
