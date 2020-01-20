@@ -28,11 +28,8 @@ public class TeleopDrive extends CommandBase {
     double xLeftAxis = Robot.oi.getLX(); // should equal variable from pad
     double yLeftAxis = Robot.oi.getLY(); // should equal variable from pad
   
-    Robot.driveTrain.setMotors(yLeftAxis + xLeftAxis * Constants.DRIVE_CONTROL, yLeftAxis - xLeftAxis * Constants.DRIVE_CONTROL);
-    SmartDashboard.putNumber("twojstary", xLeftAxis);
-    if (!Robot.oi.getYButton()){
-      finish();
-    }
+    Robot.driveTrain.setMotors((yLeftAxis + xLeftAxis) * (yLeftAxis + xLeftAxis)  * (Math.abs((yLeftAxis + xLeftAxis)))/(yLeftAxis + xLeftAxis)*Constants.DRIVE_CONTROL, (yLeftAxis - xLeftAxis) *(yLeftAxis - xLeftAxis) * (Math.abs((yLeftAxis - xLeftAxis))) /(yLeftAxis - xLeftAxis) * Constants.DRIVE_CONTROL);
+
   }
 
   @Override

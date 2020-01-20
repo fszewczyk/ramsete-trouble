@@ -14,7 +14,7 @@ public final class Constants {
 	public static final int DRIVE_BASE_RIGHT_MASTER = 0;
 	public static final int DRIVE_BASE_RIGHT_MOTOR_SLAVE = 0;
 
-	public static final double DRIVE_CONTROL = 0.5;
+	public static final double DRIVE_CONTROL = 0.4;
 
 	public static final double PAD_DEADBOUND = 0.1;
 
