@@ -9,10 +9,10 @@ package frc.robot;
 
 public final class Constants {
 
-	public static final int DRIVE_BASE_LEFT_MOTOR_MASTER = 0;
-	public static final int DRIVE_BASE_LEFT_MOTOR_SLAVE = 0;
-	public static final int DRIVE_BASE_RIGHT_MASTER = 0;
-	public static final int DRIVE_BASE_RIGHT_MOTOR_SLAVE = 0;
+	public static final int DRIVE_BASE_LEFT_MOTOR_MASTER = 1;
+	public static final int DRIVE_BASE_LEFT_MOTOR_SLAVE = 2;
+	public static final int DRIVE_BASE_RIGHT_MASTER = 3;
+	public static final int DRIVE_BASE_RIGHT_MOTOR_SLAVE = 4;
 
 	public static final double DRIVE_CONTROL = 0.4;
 
@@ -26,7 +26,7 @@ public final class Constants {
 	public static final double DRIVE_BASE_Kd = 0.0;
 	public static final double DRIVE_BASE_MIN_I = 0.0;
 	public static final double DRIVE_BASE_MAX_I = 0.0;
-	public static final double DRIVE_BASE_PID_TOLERANCE = 0;
+	public static final double DRIVE_BASE_PID_TOLERANCE = 5;
 
 	public static final int PAD_PORT = 0;
 
