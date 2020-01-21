@@ -37,4 +37,16 @@ public final class Constants {
 	public static final int L_TRIGGER = 2;
 	public static final int R_TRIGGER = 3;
 	public static final int Y_BUTTON = 0;
+
+	// Feedforward/Feedback Gains for Trajectory Calculations
+	public static final double KS_VOLTS = 0;
+	public static final double KV_VOLT_SECONDS_PER_METER = 0;
+	public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0;
+	public static final double KP_DRIVE_VEL = 0;
+
+	public static final double K_TRACK_WIDTH_METERS = 0;
+	public static final double K_MAX_SPEED_METERS_PER_SECOND = 3;
+	public static final double k_MAX_ACCELERATION_METERS_PR_SECOND_SQUARED = 3;
+	public static final double K_RAMSETE_B = 2;
+	public static final double K_RAMSETE_ZETA = 0.7;
 }

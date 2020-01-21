@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,8 @@ public class DriveTrain extends SubsystemBase {
   private VictorSPX leftMotorSlave;
   private TalonSRX rightMotorMaster;
   private VictorSPX rightMotorSlave;
+
+  private final DifferentialDriveOdometry m_odometry;
 
   public DriveTrain() {
     leftMotorMaster = new TalonSRX(Constants.DRIVE_BASE_LEFT_MOTOR_MASTER);
@@ -56,8 +59,7 @@ public class DriveTrain extends SubsystemBase {
 
   public double getGyroAngle() {
     //SmartDashboard.putNumber("gyro angle", gyro.getGyroAngleZ());
-    //return gyro.getGyroAngleZ();
-    return 0;
+    return gyro.getGyroAngleZ();
   }
 
   public void stopDrive() {
@@ -65,7 +67,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void resetGyro() {
-     //gyro.reset();
+     gyro.reset();
   }
 
   @Override
