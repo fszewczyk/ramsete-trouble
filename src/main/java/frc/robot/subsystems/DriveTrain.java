@@ -11,11 +11,12 @@ import com.analog.adis16448.frc.ADIS16448_IMU;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
-
   private ADIS16448_IMU gyro;
 
   private TalonSRX leftMotorMaster;
@@ -24,7 +25,6 @@ public class DriveTrain extends SubsystemBase {
   private VictorSPX rightMotorSlave;
 
   public DriveTrain() {
-
     leftMotorMaster = new TalonSRX(Constants.DRIVE_BASE_LEFT_MOTOR_MASTER);
     leftMotorSlave = new VictorSPX(Constants.DRIVE_BASE_LEFT_MOTOR_SLAVE);
     rightMotorMaster = new TalonSRX(Constants.DRIVE_BASE_RIGHT_MASTER);
@@ -50,7 +50,8 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getGyroAngle() {
-    return gyro.getGyroAngleZ(); 
+    SmartDashboard.putNumber("gyro angle", gyro.getGyroAngleZ());
+    return gyro.getGyroAngleZ();
   }
 
   public void stopDrive() {
@@ -58,7 +59,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void resetGyro() {
-    // reset gyro
+     gyro.reset();
   }
 
   @Override

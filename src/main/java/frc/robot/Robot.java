@@ -8,25 +8,35 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.OI;
+import frc.robot.drivetrain.TeleopDrive;
+import frc.robot.drivetrain.TurnToAngle;
 
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   public static DriveTrain driveTrain;
-  private RobotContainer m_robotContainer;
+  public static OI oi;
+  //public static TeleopDrive teleopDrive;
 
+  //private RobotContainer m_robotContainer;
+  public Robot () {
+    oi = new OI();
+    driveTrain = new DriveTrain();
+
+  }
   @Override
-  public void robotInit() {
-    driveTrain = new DriveTrain();   
-    m_robotContainer = new RobotContainer();
+  public void robotInit() {  
+    //m_robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run();    
   }
 
   @Override
@@ -51,13 +61,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    CommandScheduler.getInstance().schedule(new TeleopDrive());
   }
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("XR", oi.getRX());
+    SmartDashboard.putNumber("YL", oi.getLY());
+    SmartDashboard.putBoolean("YButton", oi.getYButton());
+    //driveTrain.getGyroAngle();
+    //if(oi.getYButton()) CommandScheduler.getInstance().schedule(new TurnToAngle(30));
+    CommandScheduler.getInstance().run();
   }
 
   @Override
@@ -69,5 +83,4 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   
   }
-
 }
