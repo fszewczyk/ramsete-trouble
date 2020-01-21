@@ -42,8 +42,9 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void setMotors(double left_speed, double right_speed) {
-    SmartDashboard.putNumber("left motors", left_speed);
-    SmartDashboard.putNumber("right motors", right_speed);
+    left_speed = Math.min(left_speed, 1);     left_speed = Math.max(left_speed, -1);
+    right_speed = Math.min(right_speed, 1);     right_speed = Math.max(right_speed, -1);
+
     leftMotorMaster.set(ControlMode.PercentOutput, left_speed);
     rightMotorMaster.set(ControlMode.PercentOutput, right_speed);
   }
