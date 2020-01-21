@@ -25,20 +25,14 @@ public class TeleopDrive extends CommandBase {
   @Override
   public void execute() {
     // Add input from pad.
-    double xRightAxis = Robot.oi.getRX(); // should equal variable from pad
-    double yLeftAxis = Robot.oi.getLY(); // should equal variable from pad
+    double xRightAxis = 0; //Robot.oi.getRX();
+    double yLeftAxis = 0; // Robot.oi.getLY();
     
     if (Math.abs(xRightAxis) < Constants.PAD_DEADBOUND) xRightAxis=0;
     if (Math.abs(yLeftAxis) < Constants.PAD_DEADBOUND) yLeftAxis=0;
 
     double left_speed = yLeftAxis + xRightAxis;
     double right_speed = yLeftAxis - xRightAxis;
-
-    left_speed = Math.min(left_speed, 1);
-    left_speed = Math.max(left_speed, -1);
-
-    right_speed = Math.min(right_speed, 1);
-    right_speed = Math.max(right_speed, -1);
 
     left_speed = left_speed * left_speed * left_speed / Math.abs(left_speed);
     right_speed = right_speed * right_speed * right_speed / Math.abs(right_speed);
