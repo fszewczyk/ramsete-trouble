@@ -27,7 +27,7 @@ public class DriveTrain extends SubsystemBase {
   private TalonSRX rightMotorMaster;
   private VictorSPX rightMotorSlave;
 
-  private final DifferentialDriveOdometry m_odometry;
+  //private final DifferentialDriveOdometry m_odometry;
 
   public DriveTrain() {
     leftMotorMaster = new TalonSRX(Constants.DRIVE_BASE_LEFT_MOTOR_MASTER);
