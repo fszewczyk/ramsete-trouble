@@ -25,8 +25,8 @@ public class TeleopDrive extends CommandBase {
   @Override
   public void execute() {
     // Add input from pad.
-    double xRightAxis = 0; //Robot.oi.getRX();
-    double yLeftAxis = 0; // Robot.oi.getLY();
+    double yLeftAxis = Robot.robotContainer.getLY(); //Robot.oi.getRX();
+    double xRightAxis = Robot.robotContainer.getRX(); // Robot.oi.getLY();
     
     if (Math.abs(xRightAxis) < Constants.PAD_DEADBOUND) xRightAxis=0;
     if (Math.abs(yLeftAxis) < Constants.PAD_DEADBOUND) yLeftAxis=0;
@@ -44,12 +44,9 @@ public class TeleopDrive extends CommandBase {
   public void end(boolean interrupted) {
     Robot.driveTrain.stopDrive();
   }
-  private void stop(){
-    isFinished=true;
-  }
 
   @Override
   public boolean isFinished() {
-    return isFinished;
+    return false;
   }
 }

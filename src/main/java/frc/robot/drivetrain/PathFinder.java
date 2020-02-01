@@ -11,7 +11,7 @@ public class PathFinder extends CommandBase {
   boolean isFinished = false;
 
     public PathFinder(double x, double y, double angle) {
-      final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.K_TRACK_WIDTH_METERS);
+      //final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.K_TRACK_WIDTH_METERS);
     }
 
     @Override

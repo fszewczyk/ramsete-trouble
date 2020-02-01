@@ -14,7 +14,7 @@ public final class Constants {
 	public static final int DRIVE_BASE_RIGHT_MASTER = 3;
 	public static final int DRIVE_BASE_RIGHT_MOTOR_SLAVE = 4;
 
-	public static final double DRIVE_CONTROL = 0.4;
+	public static final double DRIVE_CONTROL = 1;
 
 	public static final double PAD_DEADBOUND = 0.1;
 
@@ -49,4 +49,6 @@ public final class Constants {
 	public static final double k_MAX_ACCELERATION_METERS_PR_SECOND_SQUARED = 3;
 	public static final double K_RAMSETE_B = 2;
 	public static final double K_RAMSETE_ZETA = 0.7;
+
+	public static final double TICKS_TO_CENTIMETERS = 0.004349359699;
 }

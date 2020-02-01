@@ -24,15 +24,16 @@ public class Robot extends TimedRobot {
   //public static TeleopDrive teleopDrive;
   //private CameraServer cam;
 
-  //private RobotContainer m_robotContainer;
+  public static RobotContainer robotContainer;
+
   public Robot () {
+    robotContainer = new RobotContainer();
     driveTrain = new DriveTrain();
   }
   @Override
   public void robotInit() {  
-    //m_robotContainer = new RobotContainer();
-    cam.getInstance();
-    cam.startAutomaticCapture();
+    //cam.getInstance();
+    //cam.startAutomaticCapture();
   }
 
   @Override
@@ -49,7 +50,8 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {
+  public void autonomousInit() 
+  {
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -57,18 +59,18 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {
+  public void autonomousPeriodic() 
+  {
+  
   }
 
   @Override
   public void teleopInit() {
-    CommandScheduler.getInstance().schedule(new TeleopDrive());
+    CommandScheduler.getInstance().setDefaultCommand(driveTrain, new TeleopDrive());
   }
 
   @Override
   public void teleopPeriodic() {
-    //driveTrain.getGyroAngle();
-    //if(oi.getYButton()) CommandScheduler.getInstance().schedule(new TurnToAngle(30));
     CommandScheduler.getInstance().run();
   }
 

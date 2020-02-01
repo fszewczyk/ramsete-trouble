@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -30,20 +31,10 @@ public class DriveTrain extends SubsystemBase {
   //private final DifferentialDriveOdometry m_odometry;
 
   public DriveTrain() {
-    leftMotorMaster = new TalonSRX(Constants.DRIVE_BASE_LEFT_MOTOR_MASTER);
-    leftMotorSlave = new VictorSPX(Constants.DRIVE_BASE_LEFT_MOTOR_SLAVE);
-    rightMotorMaster = new TalonSRX(Constants.DRIVE_BASE_RIGHT_MASTER);
-    rightMotorSlave = new VictorSPX(Constants.DRIVE_BASE_RIGHT_MOTOR_SLAVE);
-
-    //gyro = new ADIS16448_IMU();
-
-    leftMotorSlave.follow(leftMotorMaster);
-    rightMotorSlave.follow(rightMotorMaster);
-
-    leftMotorMaster.setInverted(false);
-    leftMotorSlave.setInverted(false);
-    rightMotorMaster.setInverted(true);
-    rightMotorSlave.setInverted(true);
+    setMotorControllers();
+    setEncoders();
+    setGyro();
+    resetGyro();
   }
 
   public void setMotors(double left_speed, double right_speed) {
@@ -55,19 +46,74 @@ public class DriveTrain extends SubsystemBase {
 
     leftMotorMaster.set(ControlMode.PercentOutput, left_speed);
     rightMotorMaster.set(ControlMode.PercentOutput, right_speed);
+
+    
+    getLeftEncoderPosition();
+    getRightEncoderPosition();
+    getLeftEncoderVelocity();
+    getRightEncoderVelocity();
+    getGyroAngle();
+  }
+
+  public void setMotorControllers() {
+    leftMotorMaster = new TalonSRX(Constants.DRIVE_BASE_LEFT_MOTOR_MASTER);
+    leftMotorSlave = new VictorSPX(Constants.DRIVE_BASE_LEFT_MOTOR_SLAVE);
+    rightMotorMaster = new TalonSRX(Constants.DRIVE_BASE_RIGHT_MASTER);
+    rightMotorSlave = new VictorSPX(Constants.DRIVE_BASE_RIGHT_MOTOR_SLAVE);
+
+    leftMotorSlave.follow(leftMotorMaster);
+    rightMotorSlave.follow(rightMotorMaster);
+
+    leftMotorMaster.setInverted(false);
+    leftMotorSlave.setInverted(false);
+    rightMotorMaster.setInverted(true);
+    rightMotorSlave.setInverted(true);
+  }
+
+  public void setEncoders() {
+    leftMotorMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder,0,10);
+    leftMotorMaster.setSensorPhase(true);
+    leftMotorMaster.setSelectedSensorPosition(0,0,10);
+    rightMotorMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder,0,10);
+    rightMotorMaster.setSensorPhase(true);
+    rightMotorMaster.setSelectedSensorPosition(0,0,10);
+  }
+
+  public double getLeftEncoderVelocity()  {
+    SmartDashboard.putNumber("left encoder speed", leftMotorMaster.getSelectedSensorVelocity() * 0.1 * Constants.TICKS_TO_CENTIMETERS);
+    return leftMotorMaster.getSelectedSensorVelocity() * 0.1 * Constants.TICKS_TO_CENTIMETERS;
+  }
+
+  public double getRightEncoderVelocity()  {
+    SmartDashboard.putNumber("right encoder speed", rightMotorMaster.getSelectedSensorVelocity() * 0.1 * Constants.TICKS_TO_CENTIMETERS);
+    return rightMotorMaster.getSelectedSensorVelocity() * 0.1 * Constants.TICKS_TO_CENTIMETERS;
+  }
+
+  public double getLeftEncoderPosition()  {
+    SmartDashboard.putNumber("left encoder", leftMotorMaster.getSelectedSensorPosition()*Constants.TICKS_TO_CENTIMETERS);
+    return leftMotorMaster.getSelectedSensorPosition()*Constants.TICKS_TO_CENTIMETERS;
+  }
+
+  public double getRightEncoderPosition()  {
+    SmartDashboard.putNumber("right encoder", rightMotorMaster.getSelectedSensorPosition()*Constants.TICKS_TO_CENTIMETERS);
+    return rightMotorMaster.getSelectedSensorPosition()*Constants.TICKS_TO_CENTIMETERS;
+  }
+
+  public void setGyro() {
+    gyro = new ADIS16448_IMU();
   }
 
   public double getGyroAngle() {
-    //SmartDashboard.putNumber("gyro angle", gyro.getGyroAngleZ());
+    SmartDashboard.putNumber("gyro angle", gyro.getGyroAngleZ());
     return gyro.getGyroAngleZ();
   }
 
+  public void resetGyro() {
+    gyro.reset();
+ }
+
   public void stopDrive() {
     setMotors(0, 0);
-  }
-
-  public void resetGyro() {
-     gyro.reset();
   }
 
   @Override
