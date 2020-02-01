@@ -8,6 +8,7 @@
 package frc.robot.drivetrain;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -15,31 +16,33 @@ import frc.robot.Robot;
 public class TurnToAngle extends CommandBase {
 
   private final PIDController pidController = new PIDController(Constants.DRIVE_BASE_Kp, Constants.DRIVE_BASE_Ki, Constants.DRIVE_BASE_Kd);
+  private double desireAngle;
+  private double actualAngle;
   private boolean isFinished = false;
-  private double startGyroAngle;  
-  private double actualGyroAngle;
-
-  public TurnToAngle(double angle) {
+ 
+  public TurnToAngle() {
 
     addRequirements(Robot.driveTrain);
-
     pidController.setIntegratorRange(Constants.DRIVE_BASE_MIN_I, Constants.DRIVE_BASE_MAX_I);
     pidController.setTolerance(Constants.DRIVE_BASE_PID_TOLERANCE);
     pidController.reset();
-    pidController.setSetpoint(angle);
   }
 
   @Override
   public void initialize() {
-    
-    startGyroAngle = Robot.driveTrain.getGyroAngle(); // should read angle from gyro
+    Robot.driveTrain.resetGyro();
+    desireAngle = Robot.angleEntry.getDouble(0.0); //read angle from jetson
+    SmartDashboard.putNumber("visionAngle", desireAngle);
+    pidController.setSetpoint(desireAngle);
+
   }
 
   @Override
   public void execute() {
-    actualGyroAngle = 0; // should read actual angle from gyro
-    double speed = pidController.calculate(actualGyroAngle - startGyroAngle);
-    Robot.driveTrain.setMotors(speed, -speed);
+    actualAngle = Robot.angleEntry.getDouble(Robot.driveTrain.getGyroAngle()); // should read angle from jetson
+    SmartDashboard.putNumber("visionAngle", actualAngle);
+    double speed = pidController.calculate(actualAngle - desireAngle);
+    //Robot.driveTrain.setMotors(speed, -speed);
     isFinished = pidController.atSetpoint();
     }
 

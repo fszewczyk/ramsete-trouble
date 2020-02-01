@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,14 +24,21 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   public static DriveTrain driveTrain;
+  public static NetworkTableInstance inst;
+  public static NetworkTable table;
+  public static NetworkTableEntry angleEntry;
   //public static TeleopDrive teleopDrive;
   //private CameraServer cam;
 
   public static RobotContainer robotContainer;
 
   public Robot () {
-    robotContainer = new RobotContainer();
+
+    inst = NetworkTableInstance.getDefault();
+    table = inst.getTable("Dashboard");
+    angleEntry = table.getEntry("Angle");
     driveTrain = new DriveTrain();
+    robotContainer = new RobotContainer();
   }
   @Override
   public void robotInit() {  
