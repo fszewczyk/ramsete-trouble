@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -27,8 +30,10 @@ public class Robot extends TimedRobot {
   public static NetworkTableInstance inst;
   public static NetworkTable table;
   public static NetworkTableEntry angleEntry;
-  //public static TeleopDrive teleopDrive;
-  //private CameraServer cam;
+  // public static TeleopDrive teleopDrive;
+  private UsbCamera cam;
+  private UsbCamera cam2;
+  private CameraServer camServer;
 
   public static RobotContainer robotContainer;
 
@@ -42,8 +47,13 @@ public class Robot extends TimedRobot {
   }
   @Override
   public void robotInit() {  
-    //cam.getInstance();
-    //cam.startAutomaticCapture();
+    cam = CameraServer.getInstance().startAutomaticCapture();
+    cam2 = CameraServer.getInstance().startAutomaticCapture();
+    camServer = CameraServer.getInstance();
+    cam.setVideoMode(VideoMode.PixelFormat.kYUYV, 320, 180, 30);
+    cam2.setVideoMode(VideoMode.PixelFormat.kYUYV, 320, 180, 30);
+   // cam.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+   // cam2.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
   }
 
   @Override
