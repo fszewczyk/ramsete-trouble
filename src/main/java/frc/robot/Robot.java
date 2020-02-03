@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
 
   public Robot () {
 
-    inst = NetworkTableInstance.getDefault();
+    inst = NetworkTableInstance.getDefault();  
     table = inst.getTable("Dashboard");
     angleEntry = table.getEntry("Angle");
     driveTrain = new DriveTrain();
@@ -87,7 +87,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().setDefaultCommand(driveTrain, new TeleopDrive());
-  }
+    }
 
   @Override
   public void teleopPeriodic() {

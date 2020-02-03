@@ -21,7 +21,7 @@ public final class Constants {
 	public static final double POWER_PORT_INACCURACY = 0.1;
 
 	// Drive base PID constants
-	public static final double DRIVE_BASE_Kp = 0.0;
+	public static final double DRIVE_BASE_Kp = 0.05;
 	public static final double DRIVE_BASE_Ki = 0.0;
 	public static final double DRIVE_BASE_Kd = 0.0;
 	public static final double DRIVE_BASE_MIN_I = 0.0;
@@ -36,7 +36,7 @@ public final class Constants {
 	public static final int RY_AXIS = 5;
 	public static final int L_TRIGGER = 2;
 	public static final int R_TRIGGER = 3;
-	public static final int Y_BUTTON = 0;
+	public static final int Y_BUTTON = 4;
 
 	// Feedforward/Feedback Gains for Trajectory Calculations
 	public static final double KS_VOLTS = 0;

@@ -44,8 +44,8 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("left motor", left_speed);
     SmartDashboard.putNumber("right motor", right_speed);
 
-    leftMotorMaster.set(ControlMode.PercentOutput, left_speed);
-    rightMotorMaster.set(ControlMode.PercentOutput, right_speed);
+    leftMotorMaster.set(ControlMode.PercentOutput, left_speed*Constants.DRIVE_CONTROL);
+    rightMotorMaster.set(ControlMode.PercentOutput, right_speed*Constants.DRIVE_CONTROL);
 
     
     getLeftEncoderPosition();

@@ -9,6 +9,7 @@ import frc.robot.drivetrain.TurnToAngle;
 
 public class RobotContainer { 
 
+  public boolean yPrev = false;
   public Joystick joystick = new Joystick(Constants.PAD_PORT);
   public JoystickButton yButton = new JoystickButton(joystick, Constants.Y_BUTTON);
 
