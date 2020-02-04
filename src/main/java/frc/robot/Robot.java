@@ -20,9 +20,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveTrain;
 
-import frc.robot.drivetrain.TeleopDrive;
-import frc.robot.drivetrain.TurnToAngle;
-
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
@@ -37,8 +34,8 @@ public class Robot extends TimedRobot {
 
   public static RobotContainer robotContainer;
 
-  public Robot () {
-
+  public Robot () 
+  {
     inst = NetworkTableInstance.getDefault();  
     table = inst.getTable("Dashboard");
     angleEntry = table.getEntry("Angle");
@@ -86,8 +83,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    CommandScheduler.getInstance().setDefaultCommand(driveTrain, new TeleopDrive());
-    }
+
+  }
 
   @Override
   public void teleopPeriodic() {

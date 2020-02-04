@@ -1,144 +1,186 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+
 public class DriveTrain extends SubsystemBase {
-  private ADIS16448_IMU gyro;
+  // The motors on the left side of the drive.
+  private final SpeedControllerGroup m_leftMotors =
+      new SpeedControllerGroup(new PWMVictorSPX(Constants.kLeftMotor1Port),
+                               new PWMVictorSPX(Constants.kLeftMotor2Port));
 
-  private TalonSRX leftMotorMaster;
-  private VictorSPX leftMotorSlave;
-  private TalonSRX rightMotorMaster;
-  private VictorSPX rightMotorSlave;
+  // The motors on the right side of the drive.
+  private final SpeedControllerGroup m_rightMotors =
+      new SpeedControllerGroup(new PWMVictorSPX(Constants.kRightMotor1Port),
+                               new PWMVictorSPX(Constants.kRightMotor2Port));
 
-  //private final DifferentialDriveOdometry m_odometry;
+  // The robot's drive
+  private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
+  // The left-side drive encoder
+ /* private final Encoder m_leftEncoder =
+      new Encoder(Constants.kLeftEncoderPorts[0], Constants.kLeftEncoderPorts[1],
+                  Constants.kLeftEncoderReversed);
+
+  // The right-side drive encoder
+  private final Encoder m_rightEncoder =
+      new Encoder(Constants.kRightEncoderPorts[0], Constants.kRightEncoderPorts[1],
+                  Constants.kRightEncoderReversed);
+*/
+  // The gyro sensor
+  private final Gyro m_gyro = new ADIS16448_IMU();
+
+  // Odometry class for tracking robot pose
+  private final DifferentialDriveOdometry m_odometry;
+
+  /**
+   * Creates a new DriveSubsystem.
+   */
   public DriveTrain() {
-    setMotorControllers();
-    setEncoders();
-    setGyro();
-    resetGyro();
-  }
+    // Sets the distance per pulse for the encoders
+    m_leftEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
+    m_rightEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
 
-  public void setMotors(double left_speed, double right_speed) {
-    left_speed = Math.min(left_speed, 1);     left_speed = Math.max(left_speed, -1);
-    right_speed = Math.min(right_speed, 1);     right_speed = Math.max(right_speed, -1);
-
-    SmartDashboard.putNumber("left motor", left_speed);
-    SmartDashboard.putNumber("right motor", right_speed);
-
-    // leftMotorMaster.set(ControlMode.PercentOutput, left_speed*Constants.DRIVE_CONTROL);
-    // rightMotorMaster.set(ControlMode.PercentOutput, right_speed*Constants.DRIVE_CONTROL);
-    leftMotorMaster.set(ControlMode.Velocity, left_speed*Constants.SPEED_CONVERT);
-    rightMotorMaster.set(ControlMode.Velocity, right_speed*7200);    
-
-
-    
-    getLeftEncoderPosition();
-    getRightEncoderPosition();
-    getLeftEncoderVelocity();
-    getRightEncoderVelocity();
-    getGyroAngle();
-  }
-
-  public void setMotorControllers() {
-    leftMotorMaster = new TalonSRX(Constants.DRIVE_BASE_LEFT_MOTOR_MASTER);
-    leftMotorSlave = new VictorSPX(Constants.DRIVE_BASE_LEFT_MOTOR_SLAVE);
-    rightMotorMaster = new TalonSRX(Constants.DRIVE_BASE_RIGHT_MASTER);
-    rightMotorSlave = new VictorSPX(Constants.DRIVE_BASE_RIGHT_MOTOR_SLAVE);
-
-    leftMotorSlave.follow(leftMotorMaster);
-    rightMotorSlave.follow(rightMotorMaster);
-
-    leftMotorMaster.setInverted(false);
-    leftMotorSlave.setInverted(false);
-    rightMotorMaster.setInverted(true);
-    rightMotorSlave.setInverted(true);
-
-    leftMotorMaster.configNominalOutputForward(0, Constants.TIMEOUT);
-    rightMotorMaster.configNominalOutputForward(0, Constants.TIMEOUT);
-    leftMotorMaster.configPeakOutputForward(1, Constants.TIMEOUT);
-    rightMotorMaster.configPeakOutputForward(1, Constants.TIMEOUT);
-
-    leftMotorMaster.configNominalOutputReverse(0, Constants.TIMEOUT);
-    rightMotorMaster.configNominalOutputReverse(0, Constants.TIMEOUT);
-    leftMotorMaster.configPeakOutputReverse(-1, Constants.TIMEOUT);
-    rightMotorMaster.configPeakOutputReverse(-1, Constants.TIMEOUT);
-
-    leftMotorMaster.config_kF(Constants.PID_LOOP_ID, Constants.TALON_KF);
-    rightMotorMaster.config_kF(Constants.PID_LOOP_ID, Constants.TALON_KF);
-    leftMotorMaster.config_kP(Constants.PID_LOOP_ID, Constants.TALON_KP);
-    leftMotorMaster.config_kI(Constants.PID_LOOP_ID, Constants.TALON_KI);
-    leftMotorMaster.config_kD(Constants.PID_LOOP_ID, Constants.TALON_KD);    
-    rightMotorMaster.config_kP(Constants.PID_LOOP_ID, Constants.TALON_KP);
-    rightMotorMaster.config_kI(Constants.PID_LOOP_ID, Constants.TALON_KI);
-    rightMotorMaster.config_kD(Constants.PID_LOOP_ID, Constants.TALON_KD);
-  }
-
-  public void setEncoders() {
-    leftMotorMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder,0,10);
-    leftMotorMaster.setSensorPhase(true);
-    leftMotorMaster.setSelectedSensorPosition(0,0,10);
-    rightMotorMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder,0,10);
-    rightMotorMaster.setSensorPhase(true);
-    rightMotorMaster.setSelectedSensorPosition(0,0,10);
-  }
-
-  public double getLeftEncoderVelocity()  {
-    SmartDashboard.putNumber("left encoder speed", leftMotorMaster.getSelectedSensorVelocity());
-    return leftMotorMaster.getSelectedSensorVelocity();
-  }
-
-  public double getRightEncoderVelocity()  {
-    SmartDashboard.putNumber("right encoder speed", rightMotorMaster.getSelectedSensorVelocity());
-    return rightMotorMaster.getSelectedSensorVelocity();
-  }
-
-  public double getLeftEncoderPosition()  {
-    SmartDashboard.putNumber("left encoder", leftMotorMaster.getSelectedSensorPosition()*Constants.TICKS_TO_CENTIMETERS);
-    return leftMotorMaster.getSelectedSensorPosition()*Constants.TICKS_TO_CENTIMETERS;
-  }
-
-  public double getRightEncoderPosition()  {
-    SmartDashboard.putNumber("right encoder", rightMotorMaster.getSelectedSensorPosition()*Constants.TICKS_TO_CENTIMETERS);
-    return rightMotorMaster.getSelectedSensorPosition()*Constants.TICKS_TO_CENTIMETERS;
-  }
-
-  public void setGyro() {
-    gyro = new ADIS16448_IMU();
-  }
-
-  public double getGyroAngle() {
-    SmartDashboard.putNumber("gyro angle", gyro.getGyroAngleZ());
-    return gyro.getGyroAngleZ();
-  }
-
-  public void resetGyro() {
-    gyro.reset();
- }
-
-  public void stopDrive() {
-    setMotors(0, 0);
+    resetEncoders();
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
 
   @Override
   public void periodic() {
+    // Update the odometry in the periodic block
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getDistance(),
+                      m_rightEncoder.getDistance());
+  }
+
+  /**
+   * Returns the currently-estimated pose of the robot.
+   *
+   * @return The pose.
+   */
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
+  /**
+   * Returns the current wheel speeds of the robot.
+   *
+   * @return The current wheel speeds.
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+  }
+
+  /**
+   * Resets the odometry to the specified pose.
+   *
+   * @param pose The pose to which to set the odometry.
+   */
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+  }
+
+  /**
+   * Drives the robot using arcade controls.
+   *
+   * @param fwd the commanded forward movement
+   * @param rot the commanded rotation
+   */
+  public void arcadeDrive(double fwd, double rot) {
+    m_drive.arcadeDrive(fwd, rot);
+  }
+
+  /**
+   * Controls the left and right sides of the drive directly with voltages.
+   *
+   * @param leftVolts  the commanded left output
+   * @param rightVolts the commanded right output
+   */
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    m_leftMotors.setVoltage(leftVolts);
+    m_rightMotors.setVoltage(-rightVolts);
+    m_drive.feed();
+  }
+
+  /**
+   * Resets the drive encoders to currently read a position of 0.
+   */
+  public void resetEncoders() {
+    m_leftEncoder.reset();
+    m_rightEncoder.reset();
+  }
+
+  /**
+   * Gets the average distance of the two encoders.
+   *
+   * @return the average of the two encoder readings
+   */
+  public double getAverageEncoderDistance() {
+    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+  }
+
+  /**
+   * Gets the left drive encoder.
+   *
+   * @return the left drive encoder
+   */
+  public Encoder getLeftEncoder() {
+    return m_leftEncoder;
+  }
+
+  /**
+   * Gets the right drive encoder.
+   *
+   * @return the right drive encoder
+   */
+  public Encoder getRightEncoder() {
+    return m_rightEncoder;
+  }
+
+  /**
+   * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
+   *
+   * @param maxOutput the maximum output to which the drive will be constrained
+   */
+  public void setMaxOutput(double maxOutput) {
+    m_drive.setMaxOutput(maxOutput);
+  }
+
+  /**
+   * Zeroes the heading of the robot.
+   */
+  public void zeroHeading() {
+    m_gyro.reset();
+  }
+
+  /**
+   * Returns the heading of the robot.
+   *
+   * @return the robot's heading in degrees, from -180 to 180
+   */
+  public double getHeading() {
+    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  /**
+   * Returns the turn rate of the robot.
+   *
+   * @return The turn rate of the robot, in degrees per second
+   */
+  public double getTurnRate() {
+    return m_gyro.getRate() * (Constants.kGyroReversed ? -1.0 : 1.0);
   }
 }
