@@ -31,11 +31,11 @@ public class TeleopDrive extends CommandBase {
     if (Math.abs(xRightAxis) < Constants.PAD_DEADBOUND) xRightAxis=0;
     if (Math.abs(yLeftAxis) < Constants.PAD_DEADBOUND) yLeftAxis=0;
 
-    double left_speed = yLeftAxis + xRightAxis;
-    double right_speed = yLeftAxis - xRightAxis;
+    double left_speed = (yLeftAxis + xRightAxis);
+    double right_speed = (yLeftAxis - xRightAxis);
 
-    left_speed = left_speed * left_speed * left_speed / Math.abs(left_speed);
-    right_speed = right_speed * right_speed * right_speed / Math.abs(right_speed);
+    //left_speed = left_speed * left_speed * left_speed / Math.abs(left_speed);
+    //right_speed = right_speed * right_speed * right_speed / Math.abs(right_speed);
 
     Robot.driveTrain.setMotors(left_speed * Constants.DRIVE_CONTROL, right_speed * Constants.DRIVE_CONTROL);
   }

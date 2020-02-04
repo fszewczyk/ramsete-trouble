@@ -51,4 +51,13 @@ public final class Constants {
 	public static final double K_RAMSETE_ZETA = 0.7;
 
 	public static final double TICKS_TO_CENTIMETERS = 0.004349359699;
+
+
+	public static final double TALON_KF = 1023.0/7200.0;
+	public static final double TALON_KP = 0.05 ;
+	public static final double TALON_KI = 0.001;
+	public static final double TALON_KD = 0.001;
+	public static final int PID_LOOP_ID = 0;
+	public static final int TIMEOUT = 100;
+	public static final double SPEED_CONVERT = 8525;
 }

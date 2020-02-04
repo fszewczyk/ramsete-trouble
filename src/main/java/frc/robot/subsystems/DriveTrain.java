@@ -44,8 +44,11 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("left motor", left_speed);
     SmartDashboard.putNumber("right motor", right_speed);
 
-    leftMotorMaster.set(ControlMode.PercentOutput, left_speed*Constants.DRIVE_CONTROL);
-    rightMotorMaster.set(ControlMode.PercentOutput, right_speed*Constants.DRIVE_CONTROL);
+    // leftMotorMaster.set(ControlMode.PercentOutput, left_speed*Constants.DRIVE_CONTROL);
+    // rightMotorMaster.set(ControlMode.PercentOutput, right_speed*Constants.DRIVE_CONTROL);
+    leftMotorMaster.set(ControlMode.Velocity, left_speed*Constants.SPEED_CONVERT);
+    rightMotorMaster.set(ControlMode.Velocity, right_speed*7200);    
+
 
     
     getLeftEncoderPosition();
@@ -68,6 +71,25 @@ public class DriveTrain extends SubsystemBase {
     leftMotorSlave.setInverted(false);
     rightMotorMaster.setInverted(true);
     rightMotorSlave.setInverted(true);
+
+    leftMotorMaster.configNominalOutputForward(0, Constants.TIMEOUT);
+    rightMotorMaster.configNominalOutputForward(0, Constants.TIMEOUT);
+    leftMotorMaster.configPeakOutputForward(1, Constants.TIMEOUT);
+    rightMotorMaster.configPeakOutputForward(1, Constants.TIMEOUT);
+
+    leftMotorMaster.configNominalOutputReverse(0, Constants.TIMEOUT);
+    rightMotorMaster.configNominalOutputReverse(0, Constants.TIMEOUT);
+    leftMotorMaster.configPeakOutputReverse(-1, Constants.TIMEOUT);
+    rightMotorMaster.configPeakOutputReverse(-1, Constants.TIMEOUT);
+
+    leftMotorMaster.config_kF(Constants.PID_LOOP_ID, Constants.TALON_KF);
+    rightMotorMaster.config_kF(Constants.PID_LOOP_ID, Constants.TALON_KF);
+    leftMotorMaster.config_kP(Constants.PID_LOOP_ID, Constants.TALON_KP);
+    leftMotorMaster.config_kI(Constants.PID_LOOP_ID, Constants.TALON_KI);
+    leftMotorMaster.config_kD(Constants.PID_LOOP_ID, Constants.TALON_KD);    
+    rightMotorMaster.config_kP(Constants.PID_LOOP_ID, Constants.TALON_KP);
+    rightMotorMaster.config_kI(Constants.PID_LOOP_ID, Constants.TALON_KI);
+    rightMotorMaster.config_kD(Constants.PID_LOOP_ID, Constants.TALON_KD);
   }
 
   public void setEncoders() {
@@ -80,13 +102,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getLeftEncoderVelocity()  {
-    SmartDashboard.putNumber("left encoder speed", leftMotorMaster.getSelectedSensorVelocity() * 0.1 * Constants.TICKS_TO_CENTIMETERS);
-    return leftMotorMaster.getSelectedSensorVelocity() * 0.1 * Constants.TICKS_TO_CENTIMETERS;
+    SmartDashboard.putNumber("left encoder speed", leftMotorMaster.getSelectedSensorVelocity());
+    return leftMotorMaster.getSelectedSensorVelocity();
   }
 
   public double getRightEncoderVelocity()  {
-    SmartDashboard.putNumber("right encoder speed", rightMotorMaster.getSelectedSensorVelocity() * 0.1 * Constants.TICKS_TO_CENTIMETERS);
-    return rightMotorMaster.getSelectedSensorVelocity() * 0.1 * Constants.TICKS_TO_CENTIMETERS;
+    SmartDashboard.putNumber("right encoder speed", rightMotorMaster.getSelectedSensorVelocity());
+    return rightMotorMaster.getSelectedSensorVelocity();
   }
 
   public double getLeftEncoderPosition()  {
