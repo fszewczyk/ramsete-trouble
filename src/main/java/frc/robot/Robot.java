@@ -28,8 +28,8 @@ public class Robot extends TimedRobot {
   public static NetworkTable table;
   public static NetworkTableEntry angleEntry;
   // public static TeleopDrive teleopDrive;
-  private UsbCamera cam;
-  private UsbCamera cam2;
+ // private UsbCamera cam;
+ // private UsbCamera cam2;
   private CameraServer camServer;
 
   public static RobotContainer robotContainer;
@@ -44,11 +44,12 @@ public class Robot extends TimedRobot {
   }
   @Override
   public void robotInit() {  
-    cam = CameraServer.getInstance().startAutomaticCapture();
-    cam2 = CameraServer.getInstance().startAutomaticCapture();
-    camServer = CameraServer.getInstance();
-    cam.setVideoMode(VideoMode.PixelFormat.kYUYV, 320, 180, 30);
-    cam2.setVideoMode(VideoMode.PixelFormat.kYUYV, 320, 180, 30);
+   // cam = CameraServer.getInstance().startAutomaticCapture();
+    //cam2 = CameraServer.getInstance().startAutomaticCapture();
+    //camServer = CameraServer.getInstance();
+    //cam.setVideoMode(VideoMode.PixelFormat.kYUYV, 320, 180, 30);
+    //cam2.setVideoMode(VideoMode.PixelFormat.kYUYV, 320, 180, 30);
+    m_autonomousCommand = new RobotContainer().getAutonomousCommand();
    // cam.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
    // cam2.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
   }
@@ -69,7 +70,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() 
   {
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() 
   {
-  
+    
   }
 
   @Override

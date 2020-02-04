@@ -10,7 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
 public final class Constants {
-	public static final double TICKS_TO_CENTIMETERS = 0.004349359699;
+	public static final double TICKS_TO_METERS = 0.00004349359699;
 
 	 // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically

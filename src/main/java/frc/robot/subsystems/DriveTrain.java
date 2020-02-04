@@ -1,11 +1,17 @@
 package frc.robot.subsystems;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -17,15 +23,21 @@ import frc.robot.Constants;
 
 
 public class DriveTrain extends SubsystemBase {
+  private WPI_TalonSRX leftMaster = new WPI_TalonSRX(Constants.kLeftMotor1Port);
+  private WPI_TalonSRX rightMaster = new WPI_TalonSRX(Constants.kRightMotor1Port);
+
+  private WPI_VictorSPX leftSlave = new WPI_VictorSPX(Constants.kLeftMotor2Port);
+  private WPI_VictorSPX rightSlave = new WPI_VictorSPX(Constants.kRightMotor2Port);
+
   // The motors on the left side of the drive.
   private final SpeedControllerGroup m_leftMotors =
-      new SpeedControllerGroup(new PWMVictorSPX(Constants.kLeftMotor1Port),
-                               new PWMVictorSPX(Constants.kLeftMotor2Port));
+      new SpeedControllerGroup(leftMaster,
+                               leftSlave);
 
   // The motors on the right side of the drive.
   private final SpeedControllerGroup m_rightMotors =
-      new SpeedControllerGroup(new PWMVictorSPX(Constants.kRightMotor1Port),
-                               new PWMVictorSPX(Constants.kRightMotor2Port));
+      new SpeedControllerGroup(rightMaster,
+                               rightSlave);
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
@@ -41,7 +53,7 @@ public class DriveTrain extends SubsystemBase {
                   Constants.kRightEncoderReversed);
 */
   // The gyro sensor
-  private final Gyro m_gyro = new ADIS16448_IMU();
+  private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
 
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
@@ -51,9 +63,6 @@ public class DriveTrain extends SubsystemBase {
    */
   public DriveTrain() {
     // Sets the distance per pulse for the encoders
-    m_leftEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
-    m_rightEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
-
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
@@ -61,10 +70,9 @@ public class DriveTrain extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getDistance(),
-                      m_rightEncoder.getDistance());
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftMaster.getSelectedSensorPosition() / Constants.TICKS_TO_METERS,
+        rightMaster.getSelectedSensorPosition() / Constants.TICKS_TO_METERS);
   }
-
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -80,7 +88,8 @@ public class DriveTrain extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+    return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorVelocity() * 10 / Constants.TICKS_TO_METERS,
+        rightMaster.getSelectedSensorVelocity() * 10 / Constants.TICKS_TO_METERS);
   }
 
   /**
@@ -118,9 +127,16 @@ public class DriveTrain extends SubsystemBase {
   /**
    * Resets the drive encoders to currently read a position of 0.
    */
-  public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+  public void resetEncoders() 
+  {
+    leftMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 0, 10);
+    rightMaster.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 0, 10);
+
+    leftMaster.setSelectedSensorPosition(0,0,10);
+    rightMaster.setSelectedSensorPosition(0,0,10);
+
+    leftMaster.setSensorPhase(true);
+    rightMaster.setSensorPhase(true);
   }
 
   /**
@@ -129,7 +145,7 @@ public class DriveTrain extends SubsystemBase {
    * @return the average of the two encoder readings
    */
   public double getAverageEncoderDistance() {
-    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+    return (leftMaster.getSelectedSensorPosition() + rightMaster.getSelectedSensorPosition()) / 2.0;
   }
 
   /**
@@ -137,18 +153,18 @@ public class DriveTrain extends SubsystemBase {
    *
    * @return the left drive encoder
    */
-  public Encoder getLeftEncoder() {
+  /*public Encoder getLeftEncoder() {
     return m_leftEncoder;
-  }
+  }*/
 
   /**
    * Gets the right drive encoder.
    *
    * @return the right drive encoder
    */
-  public Encoder getRightEncoder() {
+ /*public Encoder getRightEncoder() {
     return m_rightEncoder;
-  }
+  }*/
 
   /**
    * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
