@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -72,7 +73,9 @@ public class DriveTrain extends SubsystemBase {
     // Update the odometry in the periodic block
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftMaster.getSelectedSensorPosition() / Constants.TICKS_TO_METERS,
         rightMaster.getSelectedSensorPosition() / Constants.TICKS_TO_METERS);
-  }
+    SmartDashboard.putNumber("left dist", leftMaster.getSelectedSensorPosition() * Constants.TICKS_TO_METERS);
+    SmartDashboard.putNumber("right dist", rightMaster.getSelectedSensorPosition() * Constants.TICKS_TO_METERS);
+    }
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -88,8 +91,8 @@ public class DriveTrain extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorVelocity() * 10 / Constants.TICKS_TO_METERS,
-        rightMaster.getSelectedSensorVelocity() * 10 / Constants.TICKS_TO_METERS);
+    return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorVelocity() * 10 * Constants.TICKS_TO_METERS,
+        rightMaster.getSelectedSensorVelocity() * 10 * Constants.TICKS_TO_METERS);
   }
 
   /**
@@ -120,7 +123,7 @@ public class DriveTrain extends SubsystemBase {
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     m_leftMotors.setVoltage(leftVolts);
-    m_rightMotors.setVoltage(-rightVolts);
+    m_rightMotors.setVoltage(-rightVolts); 
     m_drive.feed();
   }
 
@@ -136,7 +139,7 @@ public class DriveTrain extends SubsystemBase {
     rightMaster.setSelectedSensorPosition(0,0,10);
 
     leftMaster.setSensorPhase(true);
-    rightMaster.setSensorPhase(true);
+    rightMaster.setSensorPhase(false);
   }
 
   /**
