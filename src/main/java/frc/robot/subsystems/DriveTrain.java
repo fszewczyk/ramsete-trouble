@@ -148,7 +148,7 @@ public class DriveTrain extends SubsystemBase {
    * @return the average of the two encoder readings
    */
   public double getAverageEncoderDistance() {
-    return (leftMaster.getSelectedSensorPosition() + rightMaster.getSelectedSensorPosition()) / 2.0;
+    return (leftMaster.getSelectedSensorPosition() * Constants.TICKS_TO_METERS + rightMaster.getSelectedSensorPosition() * Constants.TICKS_TO_METERS) / 2.0;
   }
 
   /**
