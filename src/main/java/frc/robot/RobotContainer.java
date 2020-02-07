@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.List;
 
+import org.opencv.core.Mat;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -56,10 +58,10 @@ public class RobotContainer {
        // Pass through these two interior waypoints, making an 's' curve path
        List.of(
            new Translation2d(1, 0),
-           new Translation2d(2, 0)
+           new Translation2d(1.1,0)
        ),
        // End 3 meters straight ahead of where we started, facing forward
-       new Pose2d(3, 0, new Rotation2d(0)),
+       new Pose2d(5.2, 0, new Rotation2d(0)),
        // Pass config
        config
    );
@@ -73,8 +75,8 @@ public class RobotContainer {
                                   Constants.kaVoltSecondsSquaredPerMeter),
        Constants.kDriveKinematics,
        Robot.driveTrain::getWheelSpeeds,
-       new PIDController(Constants.kPDriveVel, 0, 0),
-       new PIDController(Constants.kPDriveVel, 0, 0),
+       new PIDController(0.01, 0, 0),
+       new PIDController(0.01, 0, 0),
        // RamseteCommand passes volts to the callback
        Robot.driveTrain::tankDriveVolts,
        Robot.driveTrain

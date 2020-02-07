@@ -12,18 +12,18 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 	public static final double TICKS_TO_METERS = 0.00004349359699;
 
-    public static final double ksVolts = 1.08;
-	public static final double kvVoltSecondsPerMeter = 0.0279;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.00357;
+    public static final double ksVolts = 0.948;
+	public static final double kvVoltSecondsPerMeter = 2.93;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.451;
 
-	public static final double kPDriveVel = 0.386;
+	public static final double kPDriveVel = 0;
 	
 	public static final double kTrackwidthMeters = 0.56;
     public static final DifferentialDriveKinematics kDriveKinematics =
 		new DifferentialDriveKinematics(kTrackwidthMeters);
 	
-	public static final double kMaxSpeedMetersPerSecond = 2.5;
-	public static final double kMaxAccelerationMetersPerSecondSquared = 1.25;
+	public static final double kMaxSpeedMetersPerSecond = 0.5;
+	public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;
 	
 	// Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;

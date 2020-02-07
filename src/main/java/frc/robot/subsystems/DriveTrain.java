@@ -30,33 +30,19 @@ public class DriveTrain extends SubsystemBase {
   private WPI_VictorSPX leftSlave = new WPI_VictorSPX(Constants.kLeftMotor2Port);
   private WPI_VictorSPX rightSlave = new WPI_VictorSPX(Constants.kRightMotor2Port);
 
-  // The motors on the left side of the drive.
   private final SpeedControllerGroup m_leftMotors =
       new SpeedControllerGroup(leftMaster,
                                leftSlave);
 
-  // The motors on the right side of the drive.
   private final SpeedControllerGroup m_rightMotors =
       new SpeedControllerGroup(rightMaster,
                                rightSlave);
 
-  // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
-  // The left-side drive encoder
- /* private final Encoder m_leftEncoder =
-      new Encoder(Constants.kLeftEncoderPorts[0], Constants.kLeftEncoderPorts[1],
-                  Constants.kLeftEncoderReversed);
 
-  // The right-side drive encoder
-  private final Encoder m_rightEncoder =
-      new Encoder(Constants.kRightEncoderPorts[0], Constants.kRightEncoderPorts[1],
-                  Constants.kRightEncoderReversed);
-*/
-  // The gyro sensor
   private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
 
-  // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
 
   /**
@@ -71,10 +57,13 @@ public class DriveTrain extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftMaster.getSelectedSensorPosition() / Constants.TICKS_TO_METERS,
-        rightMaster.getSelectedSensorPosition() / Constants.TICKS_TO_METERS);
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftMaster.getSelectedSensorPosition() * Constants.TICKS_TO_METERS,
+        rightMaster.getSelectedSensorPosition() * Constants.TICKS_TO_METERS);
     SmartDashboard.putNumber("left dist", leftMaster.getSelectedSensorPosition() * Constants.TICKS_TO_METERS);
     SmartDashboard.putNumber("right dist", rightMaster.getSelectedSensorPosition() * Constants.TICKS_TO_METERS);
+    SmartDashboard.putNumber("left speed", leftMaster.getSelectedSensorVelocity() * 10 * Constants.TICKS_TO_METERS);
+    SmartDashboard.putNumber("right speed", rightMaster.getSelectedSensorVelocity() * 10 * Constants.TICKS_TO_METERS);
+    SmartDashboard.putNumber("gyro", getHeading());
     }
   /**
    * Returns the currently-estimated pose of the robot.
@@ -175,7 +164,7 @@ public class DriveTrain extends SubsystemBase {
    * @param maxOutput the maximum output to which the drive will be constrained
    */
   public void setMaxOutput(double maxOutput) {
-    m_drive.setMaxOutput(maxOutput);
+    m_drive.setMaxOutput(maxOutput/5);
   }
 
   /**
