@@ -33,7 +33,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() 
   {
-       // Create a voltage constraint to ensure we don't accelerate too fast
        var autoVoltageConstraint =
        new DifferentialDriveVoltageConstraint(
            new SimpleMotorFeedforward(Constants.ksVolts,
@@ -42,27 +41,19 @@ public class RobotContainer {
            Constants.kDriveKinematics,
            10);
 
-   // Create config for trajectory
    TrajectoryConfig config =
        new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
                             Constants.kMaxAccelerationMetersPerSecondSquared)
-           // Add kinematics to ensure max speed is actually obeyed
            .setKinematics(Constants.kDriveKinematics)
-           // Apply the voltage constraint
            .addConstraint(autoVoltageConstraint);
 
-   // An example trajectory to follow.  All units in meters.
    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-       // Start at the origin facing the +X direction
        new Pose2d(0, 0, new Rotation2d(0)),
-       // Pass through these two interior waypoints, making an 's' curve path
        List.of(
-           new Translation2d(1, 0),
-           new Translation2d(1.1,0)
+           new Translation2d(1, 1),
+           new Translation2d(1.1,2)
        ),
-       // End 3 meters straight ahead of where we started, facing forward
-       new Pose2d(5.2, 0, new Rotation2d(0)),
-       // Pass config
+       new Pose2d(5.2, 3, new Rotation2d(0)),
        config
    );
 
@@ -77,12 +68,10 @@ public class RobotContainer {
        Robot.driveTrain::getWheelSpeeds,
        new PIDController(0.01, 0, 0),
        new PIDController(0.01, 0, 0),
-       // RamseteCommand passes volts to the callback
        Robot.driveTrain::tankDriveVolts,
        Robot.driveTrain
    );
 
-   // Run path following command, then stop at the end.
    return ramseteCommand.andThen(() -> Robot.driveTrain.tankDriveVolts(0, 0));
  }
 }
